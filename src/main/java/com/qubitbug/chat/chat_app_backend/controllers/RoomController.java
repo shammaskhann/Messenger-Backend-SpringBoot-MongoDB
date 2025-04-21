@@ -26,8 +26,6 @@ public class RoomController {
     @Autowired
     private RoomRepository roomRepository;
 
-
-
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody CreateRoomArgs args){
         log.info("Creating a new room with id: {}", args.getRoomId());

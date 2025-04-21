@@ -95,10 +95,12 @@ public class UserService {
             if (!checkFriendReqExists(sender, receiver)) {
                 return false;
             }
+            String roomId = sender.getId() + receiver.getId();
             receiver.getFriends().add(new FriendEntity(
                     sender.getId(),
                     sender.getUsername(),
-                    sender.getEmail()
+                    sender.getEmail(),
+                    roomId
             ));
             receiver.getFriendRequests().removeIf(request -> request.getSenderId().equals(sender.getId()));
             sender.getFriends().add(
@@ -106,6 +108,7 @@ public class UserService {
                             receiver.getId(),
                             receiver.getUsername(),
                             receiver.getEmail()
+                            , roomId
                     )
             );
             userRepository.save(sender);
@@ -122,14 +125,6 @@ public class UserService {
     public boolean checkEmailExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
-
-//    public List<UserEntity> getAllUsers() {
-//        return userRepository.findAll();
-//    }
-
-//    public void deleteAll() {
-//        userRepository.deleteAll();
-//    }
 
     public UserEntity findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
