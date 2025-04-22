@@ -5,11 +5,13 @@ import com.qubitbug.chat.chat_app_backend.entities.Message;
 import com.qubitbug.chat.chat_app_backend.entities.Room;
 import com.qubitbug.chat.chat_app_backend.payload.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 @Service
+@CacheConfig(cacheNames = "messages")
 public class MessageService {
 
     private final SimpMessagingTemplate messagingTemplate;
