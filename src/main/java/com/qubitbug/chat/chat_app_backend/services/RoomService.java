@@ -20,19 +20,19 @@ public class RoomService {
     @Autowired
     RoomRepository roomRepository;
 
-    @Cacheable(key = "#roomId")
+    //@Cacheable(key = "#roomId")
     public Room getRoomById(String roomId){
         return roomRepository.findByRoomId(roomId);
     }
 
-    @CachePut(key = "#room.roomId")
+    //@CachePut(key = "#room.roomId")
     public void saveRoom(Room room){
         roomRepository.save(room);
     }
 
-    @Cacheable(key = "'messages_' + #roomId + '_' + #page + '_' + #size")
+   // @Cacheable(key = "'messages_' + #roomId + '_' + #page + '_' + #size")
     public List<Message> getRoomMessages(String roomId, int page, int size) {
-        log.info("Fetching messages for room {} (page {}, size {}) from database", roomId, page, size);
+       // log.info("Fetching messages for room {} (page {}, size {}) from database", roomId, page, size);
         Room room = getRoomById(roomId);
         List<Message> messages = room.getMessages();
         int start = page * size;

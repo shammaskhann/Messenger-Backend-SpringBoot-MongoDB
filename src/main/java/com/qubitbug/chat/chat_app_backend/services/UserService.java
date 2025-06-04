@@ -1,9 +1,11 @@
 package com.qubitbug.chat.chat_app_backend.services;
 
+import com.qubitbug.chat.chat_app_backend.controllers.RoomController;
 import com.qubitbug.chat.chat_app_backend.entities.FriendEntity;
 import com.qubitbug.chat.chat_app_backend.entities.FriendRequest;
 import com.qubitbug.chat.chat_app_backend.entities.UserCredentials;
 import com.qubitbug.chat.chat_app_backend.entities.UserEntity;
+import com.qubitbug.chat.chat_app_backend.entities.args.CreateRoomArgs;
 import com.qubitbug.chat.chat_app_backend.repositories.UserRepository;
 import com.qubitbug.chat.chat_app_backend.repositories.UserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,9 @@ public class UserService {
     @Autowired
     private UserRepositoryImpl userRepositoryImpl;
 
+    @Autowired
+    private RoomController _roomController;
+
     public void register(UserEntity userEntity) {
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userRepository.save(userEntity);
@@ -43,6 +48,7 @@ public class UserService {
     }
 
     public UserEntity login(UserCredentials userCredentials) {
+
         userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
         return userRepository.findByEmailAndPassword(userCredentials.getEmail(), userCredentials.getPassword());
     }
@@ -99,6 +105,10 @@ public class UserService {
                 return false;
             }
             String roomId = sender.getId() + receiver.getId();
+            _roomController.createRoom(new CreateRoomArgs(
+                    roomId,
+                    sender.getUsername()+receiver.getUsername()
+            ));
             receiver.getFriends().add(new FriendEntity(
                     sender.getId(),
                     sender.getUsername(),
@@ -114,6 +124,7 @@ public class UserService {
                             , roomId
                     )
             );
+
             userRepository.save(sender);
             userRepository.save(receiver);
             return true;
@@ -130,7 +141,7 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    @Cacheable(key = "#email")
+    //@Cacheable(key = "#email")
     public UserEntity findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
@@ -142,6 +153,10 @@ public class UserService {
 
         }
         return null;
+    }
+    @Cacheable(value = "usersCache", key = "'users'")
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
 }
 

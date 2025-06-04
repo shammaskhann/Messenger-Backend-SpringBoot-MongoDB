@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Document(collection = "users")
-public class UserEntity  {
+public class UserEntity implements Serializable {
     @Id
     private String id;
     //MongoDB Unique constraint
@@ -27,6 +28,7 @@ public class UserEntity  {
     private String username;
     @NonNull
     private String password;
+    @Indexed(unique = true)
     private String email;
     private String deviceToken;
     private List<FriendRequest> friendRequests = new ArrayList<>();

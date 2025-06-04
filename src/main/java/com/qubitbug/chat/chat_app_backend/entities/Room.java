@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 @ToString
 @Document(collection = "rooms")
-public class Room {
+public class Room implements Serializable {
     @Id
     private String id; //MongoDB ID
     private String roomId;
